@@ -1,0 +1,174 @@
+
+<style>
+@media (min-width: 768px){
+  .modal-dialog {
+      width: 70%;
+      margin: 30px auto;
+  }
+}
+</style>
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+        Part Filter
+      </h1>
+
+
+    </section>
+    <section class="content-header">
+        <div class="row">
+
+            <div class="col-sm-6">
+                <div class="col-sm-10">
+                    <div class="form-group has-feedback">
+                        <select class="form-control" ng-model="fpc.part" id="part" name="part" style="width: 100%;">
+                            <option value="">Please Select</option>
+                            <option value="{{p.id}}" ng-repeat="p in fpc.partList">{{p.name}}</option>
+
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <button type="submit" class="btn btn-success pull-right" ng-click="fpc.filterPart()">Search</button>
+                  </div>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="box">
+            <div class="box-header">
+              <h3 class="box-title">Part List</h3>
+
+              <div class="box-tools">
+
+              </div>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body table-responsive no-padding">
+              <table class="table table-hover">
+                <tr>
+                  <th>Sr. No.</th>
+                  <th>Machine Name</th>
+                  <th>Parameters</th>
+                  <th>Tools</th>
+                  <th>Add Tool</th>
+                </tr>
+                <tr ng-repeat="part in fpc.tableData.selectedParameterList">
+                  <td>{{$index+1}}</td>
+                  <td>{{fpc.tableData.name}}</td>
+                  <td>{{part.name}}</td>
+                  <td><ul>
+                      <li ng-repeat="pr in part.tools">{{pr.name}}</li>
+                    </ul>
+                  <td>
+                    <button type="button" class="btn btn-success" ng-click="fpc.addToolModal(part.id)"><i class="fa fa-plus-circle"></i></button>
+                  </td>
+                </tr>
+                <tr ng-if="fpc.tableData.selectedParameterList.length==0">
+                  <td style="text-align: center" colspan="5">No Data Found..!</td>
+              </tr>
+              </table>
+            </div>
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
+        </div>
+      </div>
+    </section>
+    <!-- /.content -->
+  </div>
+
+  <div class="modal fade" id="createToolModal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" ng-bind="fpc.partOpt"></h4>
+          </div>
+          <div class="modal-body">
+              <form id="create-part-form">
+                  <div class="row">
+                      <div class="col-sm-3">
+                          <div class="form-group has-feedback">
+                              <select class="form-control" ng-model="fpc.tool" id="tool" name="tool" style="width: 100%;">
+                                  <option value="">Please select Tool</option>
+                                  <option value="{{mc}}" ng-repeat="mc in fpc.toolList">{{mc.name}}</option>
+
+                              </select>
+                          </div>
+                      </div>
+                      <div class="col-sm-3">
+                          <div class="form-group has-feedback">
+                              <input type="text" class="form-control" placeholder="Enter Actual Value" ng-model="fpc.actualValue" id="actualValue" name="actualValue" style="width: 100%;" />
+                          </div>
+                      </div>
+                      <div class="col-sm-3">
+                          <div class="form-group has-feedback">
+                              <input type="text" class="form-control" placeholder="Enter Down Tolerance (-)" ng-model="fpc.downTolerance" id="downTolerance" name="downTolerance" style="width: 100%;" />
+                          </div>
+                      </div>
+                      <div class="col-sm-3">
+                          <div class="form-group has-feedback">
+                              <input type="text" placeholder="Enter Up Tolerance (+)" class="form-control" ng-model="fpc.upTolerance" id="upTolerance" name="upTolerance" style="width: 100%;" />
+                          </div>
+                      </div>
+
+                    </div>
+                </form>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+            <button type="button" ng-click="fpc.addToolInPrameter(fpc.tool)" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+        <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+
+    <script>
+    (function () {
+      $('#create-part-form').validate({
+          errorElement: 'span', //default input error message container
+          errorClass: 'help-block help-block-error', // default input error message class
+          focusInvalid: false, // do not focus the last invalid input
+          ignore: "", // validate all fields including form hidden input
+          rules: {
+              tool: {
+                required: true,
+              },
+              upTolerance:{
+                required: true,
+              },
+              downTolerance:{
+                required: true,
+              },
+              actualValue:{
+                required: true,
+              }
+          },
+          highlight: function (element) { // hightlight error inputs
+              $(element)
+                      .closest('.form-group').addClass('has-error'); // set error class to the control group
+          },
+          unhighlight: function (element) { // revert the change done by hightlight
+              $(element)
+                      .closest('.form-group').removeClass('has-error'); // set error class to the control group
+          },
+          success: function (label) {
+              label
+                      .closest('.form-group').removeClass('has-error'); // set success class to the control group
+          }
+      });
+    })();
+    </script>
